@@ -1,0 +1,41 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+
+\newcommand{\subheight}{3cm}
+\newcommand{\multiplyingfactor}{0.2}
+\newcommand{\additivefactor}{0}
+\begin{document}
+
+\begin{minipage}{8cm}
+  \begin{tikzpicture}
+    \pgfplotstableread{../data/meanpathlength.csv}\datatrue
+    \pgfplotstableread{../data/meanpathlength_exporder_SurpAC_run2.csv}\dataruntwo
+    \begin{axis}[
+      width = \textwidth,
+      ymajorgrids,
+      ymin = 1, ymax = 10,
+      xmin = 0, xmax = 40,
+      xtick={0, 5, ..., 40},
+      ylabel = {mean episode length},
+      xlabel = {episodes},
+      clip mode=individual
+      ]
+      \addplot[only marks, draw, gray!70, fill=gray!70,
+          error bars/.cd, y dir=both, y explicit,
+          ]
+          table [x expr=\coordindex+1, y expr = \thisrow{meanlength}, y error expr = \thisrow{selength}] {\datatrue};
+          %
+          % --- Sim
+      % --- run 2
+      \addplot[only marks, draw, mark=*, mark size=1.6pt, mark options={fill=orange!50},
+          error bars/.cd, y dir=both, y explicit,
+          ]
+          table [x expr=\coordindex+1, y expr = \thisrow{meanlength}, y error expr = \thisrow{selength}] {\dataruntwo};
+    \end{axis}
+  \end{tikzpicture}
+
+\end{minipage}
+\end{document}

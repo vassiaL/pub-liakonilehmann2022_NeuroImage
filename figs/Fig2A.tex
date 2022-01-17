@@ -1,0 +1,32 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+
+\newcommand{\subheight}{3cm}
+\newcommand{\multiplyingfactor}{0.2}
+\newcommand{\additivefactor}{0}
+\begin{document}
+
+\begin{minipage}{8cm}
+  \begin{tikzpicture}
+    \pgfplotstableread{../data/meanpathlength.csv}\data
+    \begin{axis}[
+      width = \textwidth,
+      ymajorgrids,
+      ymin = 1, ymax = 10,
+      xmin = 0, xmax = 40,
+      xtick={0, 5, ..., 40},
+      ylabel = {mean episode length},
+      xlabel = {episodes},
+      ]
+      \addplot[only marks, draw, fill=blue!40,
+          error bars/.cd, y dir=both, y explicit,
+          ]
+          table [x expr=\coordindex+1, y expr = \thisrow{meanlength}, y error expr = \thisrow{selength}] {\data};
+    \end{axis}
+  \end{tikzpicture}
+
+\end{minipage}
+\end{document}

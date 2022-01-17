@@ -1,0 +1,132 @@
+\usepackage{tikz,pgfplots,pgfplotstable}
+\usepackage{xcolor}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{positioning}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{shapes}
+
+%
+% \newcommand{\smilename}{SMiLe$^{*}$}
+% \newcommand{\vsmile}{VarSMiLe}
+% \newcommand{\pfone}{pf1}
+% \newcommand{\pften}{pf10}
+% \newcommand{\pftwenty}{pf20}
+% \newcommand{\leaky}{Leaky}
+% \newcommand{\mpbayes}{Exact Bayes}
+% \newcommand{\mpone}{MP1}
+% \newcommand{\mpten}{MP10}
+% \newcommand{\mptwenty}{MP20}
+% \newcommand{\nassarten}{Nas10$^{*}$}
+% \newcommand{\nassartwelve}{Nas12$^{*}$}
+%
+% \newcommand{\nassartenoriginal}{Nas10 original}
+% \newcommand{\nassartwelveoriginal}{Nas12 original}
+%
+% \newcommand{\mporiginalone}{SOR1}
+% \newcommand{\mporiginalten}{SOR10}
+% \newcommand{\mporiginaltwenty}{SOR20}
+%
+% \newcommand{\smileoriginal}{SMiLe}
+
+% \tikzstyle{every pin}=[font=\small]
+% \definecolor{mp1color}{rgb}{0.15,0.58,1}
+% \definecolor{mp10color}{rgb}{0,1,1}
+
+\newcommand{\modelfree}{blue}
+\newcommand{\modelbased}{green!65!black}
+\newcommand{\modelfreesurp}{violet!95!black}
+\newcommand{\hybrid}{orange}
+
+%
+% \newcommand{\onebar}{orange}
+% \newcommand{\threebar}{orange}
+
+\tikzset{
+    %font = \scriptsize,
+    font = \small,
+    %font = \large,
+    actualpcstyle/.style = {anchor = east, rotate = 90, isosceles triangle, fill = red!90!black, draw = none, inner sep = 1},
+    rt_surprise/.style = {orange, thick},
+    rt_nonsurprise/.style = {blue, thick},
+    unequaldist/.style = {green!40!black, thick},
+    equaldist/.style = {yellow!80!red, thick},
+    one/.style = {fill=blue!40},
+    three/.style = {fill=green!40},
+    %
+    onefaded/.style = {fill=gray!30},
+    threefaded/.style = {fill=gray!30},
+    %
+    rtscatter/.style = {blue!40, very thick, mark=o, mark size=1.2pt, mark options={solid}}
+}
+\pgfplotsset{
+    legend style = {draw = none},
+    colorbar/width = 6pt,
+}
+\newcommand{\plotwithquantiles}[2]{
+    \addplot[draw = none, name path=lower] table[x = x, y expr = \thisrow{#1_mean} - \thisrow{#1_se}] {#2};
+    \addplot[draw = none, name path=upper] table[x = x, y expr = \thisrow{#1_mean} + \thisrow{#1_se}] {#2};
+    \addplot[#1, opacity = .4] fill between [of=lower and upper];
+    \addplot[#1] table[x = x, y = #1_mean] {#2};
+}
+\newcommand{\trimleft}[1]{
+    \begin{tikzpicture}[trim axis left]
+        #1
+    \end{tikzpicture}
+}
+\newcommand{\trimright}[1]{
+    \begin{tikzpicture}[trim axis right]
+        #1
+    \end{tikzpicture}
+}
+\newcommand{\trimboth}[1]{
+    \begin{tikzpicture}[trim axis right, trim axis left]
+        #1
+    \end{tikzpicture}
+}
+
+
+
+% This is needed to be able to filter table wrt values
+\pgfplotsset{
+    discard if not/.style 2 args={
+        % x filter/.code={
+        x filter/.append code={
+        % /pgfplots/boxplot/data filter/.append code={
+            \edef\tempa{\thisrow{#1}}
+            \edef\tempb{#2}
+            \ifx\tempa\tempb
+            \else
+                \def\pgfmathresult{NaN}
+            \fi
+        }
+    }
+  }
+
+% #1 = color
+% #2 = run number
+% #3 = data table
+  \newcommand{\plotwithmarkers}[3]{
+      \addplot[#1, thick, mark=*, mark options={fill=#1}] table [x expr=\coordindex+1, y expr = \thisrow{run#2}] {#3};
+  }
+
+  % #1 = color
+  % #2 = data table
+  \newcommand{\plotscatterweightedwitherrorbars}[2]{
+  \addplot[scatter, only marks, draw, fill=#1,
+      % visualization depends on={\additivefactor + \multiplyingfactor*\thisrow{weights_rt_nonsurprise_after4} \as \weight},
+      visualization depends on={\additivefactor + \multiplyingfactor*\thisrow{weights_rt_nonsurprise} \as \weight},
+      scatter/@pre marker code/.style={/tikz/mark size=\weight},
+      scatter/@post marker code/.style={},
+      error bars/.cd, y dir=both, y explicit,
+      ]
+      % table [x expr=\coordindex+1, y expr = \thisrow{mean_rt_nonsurprise_after4}, y error expr = \thisrow{se_rt_nonsurprise_after4}] {\datanonsurp};
+      table [x expr=\coordindex+1, y expr = \thisrow{mean_rt_nonsurprise}, y error expr = \thisrow{se_rt_nonsurprise}] {#2};
+  }
+
+
+  % #1 = color
+  % #2 = row number
+  % #3 = data table
+    \newcommand{\plotwithmarkersRadj}[3]{
+        \addplot[#1, thick, mark=*, mark options={fill=#1}] table [x expr=\coordindex+1, y expr = \thisrow{#2}] {#3};
+    }

@@ -1,0 +1,21 @@
+
+Some naming conventions in the code are slightly different than the one used in the paper.
+We chose not to change them to avoid the introduction of errors and keep the code "as is".
+
+More specifically:
+
+- surprise trials = catch trials = jumps
+- graph 2 = G3 = graph 3
+
+- Surprise Actor-critic = actorCriticTD_modulatedActor = ActorCriticModulated = actor_critic_TD_modulatedActor_1degree
+- Surprise REINFORCE = REINFORCE_modulated
+- Hybrid Actor-Critic PF = hybrid_actorcritic_FWD_BF
+- Surprise Sarsa-λ = sarsaL_modulated
+- Hybrid-λ (Daw et al. 2011) = hybridSarsaL = hybrid_FWD_SarsaLambda
+- Hybrid-0 (Glaescher et al. 2010) = glaescherHybrid = glaescher_hybrid
+- Hybrid Actor-Critic = hybrid_actorcritic_FWD
+- Hybrid-λ-PS-PF = hybrid_pspf_sarsaL = Hybrid_Prio_Sweep_TParticleFilterJump
+
+
+
+

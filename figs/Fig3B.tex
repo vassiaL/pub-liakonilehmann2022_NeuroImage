@@ -1,0 +1,98 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+
+\newcommand{\send}{}
+
+\begin{document}
+
+\begin{minipage}{8cm}
+\begin{tikzpicture}
+
+   \pgfplotstableread{../data/serverresults_crossval_all_s5_127_resultscrossval_multipleruns_mean_s5.csv}\data
+   % Results with stochasticity $\sigma$ (of particle filter) range up to 20: 
+  \pgfplotstableread{../data/serverresults_crossval_s20_group1_045_resultscrossval_multipleruns_mean_s20.csv}\datastwenty
+
+  \pgfplotstablegetelem{0}{REINFORCE_mean\send}\of{\data}
+  \pgfmathsetmacro{\REINFORCE}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{REINFORCE_stderror\send}\of{\data}
+  \pgfmathsetmacro{\REINFORCEstderror}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{actor_critic_TD_mean\send}\of{\data}
+  \pgfmathsetmacro{\AC}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{actor_critic_TD_stderror\send}\of{\data}
+  \pgfmathsetmacro{\ACstderror}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{hybrid_actorcritic_FWD_mean\send}\of{\data}
+  \pgfmathsetmacro{\HybridACFWD}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{hybrid_actorcritic_FWD_stderror\send}\of{\data}
+  \pgfmathsetmacro{\HybridACFWDstderror}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{REINFORCE_baseline_mean\send}\of{\data}
+  \pgfmathsetmacro{\REINFORCEbaseline}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{REINFORCE_baseline_stderror\send}\of{\data}
+  \pgfmathsetmacro{\REINFORCEbaselinestderror}{\pgfplotsretval}
+
+  % ----------------
+  % With s_max = 20
+  \pgfplotstablegetelem{0}{REINFORCE_modulated_mean\send}\of{\datastwenty}
+  \pgfmathsetmacro{\REINFORCEmodulated}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{REINFORCE_modulated_stderror\send}\of{\datastwenty}
+  \pgfmathsetmacro{\REINFORCEmodulatedstderror}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{actor_critic_TD_modulatedActor_1degree_mean\send}\of{\datastwenty}
+  \pgfmathsetmacro{\ACmodulated}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{actor_critic_TD_modulatedActor_1degree_stderror\send}\of{\datastwenty}
+  \pgfmathsetmacro{\ACmodulatedstderror}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{hybrid_actorcritic_FWD_BF_mean\send}\of{\datastwenty}
+  \pgfmathsetmacro{\HybridACFWDBF}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{hybrid_actorcritic_FWD_BF_stderror\send}\of{\datastwenty}
+  \pgfmathsetmacro{\HybridACFWDBFstderror}{\pgfplotsretval}
+  %
+  % ----- Compute differences
+  \pgfmathsetmacro{\ACminusREINFORCEbaseline}{\AC - \REINFORCEbaseline}
+  \pgfmathsetmacro{\ACminusHybridACFWD}{\AC - \HybridACFWD}
+  \pgfmathsetmacro{\ACminusACmodulated}{\AC - \ACmodulated}
+  \pgfmathsetmacro{\ACminusREINFORCEmodulated}{\AC - \REINFORCEmodulated}
+
+  \begin{axis}[
+    width = \textwidth,
+    ymajorgrids,
+    xmin = -1,
+    xmax = 7,
+    ymin = 1503.5,
+    ymax = 1510,
+    xtick={0, 1, 2, ..., 6},
+    xticklabel style={rotate={60}, anchor={east}},
+    xticklabels={Hybrid Actor-critic PF, Surprise Actor-critic, REINFORCE, Hybrid Actor-critic , REINFORCE baseline, Surprise REINFORCE,  Actor-critic},
+    ylabel = - log-evidence,
+    enlarge x limits=-1,
+    ]
+  \addplot+[ybar, fill=\hybrid, draw=none, mark=none, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(0, - \HybridACFWDBF) +- (0, \HybridACFWDBFstderror)};
+  \addplot [ybar, fill=\modelfreesurp, draw=none, mark=none, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(1, - \ACmodulated) +- (0, \ACmodulatedstderror)};
+  \addplot [ybar, fill=\modelfree, draw=none, mark=none, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(2, - \REINFORCE) +- (0, \REINFORCEstderror)};
+  \addplot [ybar, fill=\hybrid, draw=none, mark=none, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(3, - \HybridACFWD) +- (0, \HybridACFWDstderror)};
+   \addplot [ybar, fill=\modelfree, draw=none, mark=none, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(4, - \REINFORCEbaseline) +- (0, \REINFORCEbaselinestderror)};
+  \addplot [ybar, fill=\modelfreesurp, draw=none, mark=none, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(5, - \REINFORCEmodulated) +- (0, \REINFORCEmodulatedstderror)};
+   \addplot [ybar, fill=\modelfree, draw=none, mark=none, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(6, - \AC) +- (0, \ACstderror)};
+   \node (aboveREINFORCEmodulated) at (4.85, 1508) {};
+   \node (aboveAC1) at (6.15, 1508) {};
+   \node (aboveHybridAC) at (2.85, 1508.7) {};
+   \node (aboveAC2) at (6.15, 1508.7) {};
+   \node (aboveACmodulated) at (0.85, 1509.4) {};
+   \node (aboveAC3) at (6.15, 1509.4) {};
+   %
+\end{axis}
+\draw[-, thick] (aboveREINFORCEmodulated) -- (aboveAC1) node[midway, above, font={\fontsize{8pt}{12 pt}\selectfont}] {$\Delta=
+ \pgfmathparse{\ACminusREINFORCEmodulated}\pgfmathprintnumber\pgfmathresult$};
+\draw[-, thick] (aboveHybridAC) -- (aboveAC2) node[midway, above, font={\fontsize{8pt}{12 pt}\selectfont}] {$\Delta=
+ \pgfmathparse{\ACminusHybridACFWD}\pgfmathprintnumber\pgfmathresult$};
+\draw[-, thick] (aboveACmodulated) -- (aboveAC3) node[midway, above, font={\fontsize{8pt}{12 pt}\selectfont}] {$\Delta=
+\pgfmathparse{\ACminusACmodulated}\pgfmathprintnumber\pgfmathresult$};
+\end{tikzpicture}
+
+\end{minipage}
+\end{document}

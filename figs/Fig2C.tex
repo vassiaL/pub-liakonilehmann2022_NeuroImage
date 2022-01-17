@@ -1,0 +1,31 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+\usepgfplotslibrary{colormaps}
+
+
+\begin{document}
+
+\begin{minipage}{8cm}
+  \begin{tikzpicture}
+    \pgfplotstableread{../data/reactiontime_stats_after4_nooutliers8.csv}\data
+    \begin{axis}[
+          width = \textwidth,
+          ybar,
+          ymin=0,
+          ymajorgrids,
+          xlabel = {difference in reaction time (sec)},
+          ]
+    \addplot +[black, fill=orange!40, hist={
+        bins=15,
+        data min=-0.5,
+        data max=1
+        }
+        ] table [y expr = \thisrow{mean_rt_diff}] {\data};
+    \end{axis}
+  \end{tikzpicture}
+
+\end{minipage}
+\end{document}

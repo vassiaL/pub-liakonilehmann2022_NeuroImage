@@ -1,0 +1,16 @@
+REINFORCE
+REINFORCE_baseline
+REINFORCE_modulated
+actor_critic_TD
+actor_critic_TD_modulatedActor_1degree
+biased_random_walk
+forward_learner
+glaescher_hybrid
+hybrid_FWD_SarsaLambda
+hybrid_actorcritic_FWD
+hybrid_actorcritic_FWD_BF
+hybrid_modulated
+hybrid_pspf_sarsaL
+priosweep_particle
+sarsaL_modulated
+sarsa_lambda

@@ -1,0 +1,60 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+\usepgfplotslibrary{colormaps}%
+
+\newcommand{\subheight}{3cm}
+\newcommand{\multiplyingfactor}{0.2}
+\newcommand{\additivefactor}{0}
+
+\begin{document}
+
+\begin{minipage}{8cm}
+  \begin{tikzpicture}
+    \pgfplotstableread{../data/reactiontime_stats_scatter_after4_nooutliers8.csv}\data
+    \pgfplotstableread{../data/reactiontime_meanall_after4_nooutliers8.csv}\datamean
+    \begin{axis}[
+      width = \textwidth,
+      ymajorgrids,
+      ymin = 0, ymax = 3,
+      xmin = 0.5, xmax = 2.5,
+      xtick={1,2},
+      xticklabel style={align=center}, xticklabels={Non-surprise\\trials, Surprise\\trials},
+      ylabel = {reaction time (sec)},
+      ]
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_April102015.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_April172015.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_August242015.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_August272015.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Jan152016.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Jan212016.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Jan222016_Exp1.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Jan222016_Exp2.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_July092015.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_July152015.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_June052015_Exp1.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar152016.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar172016_1.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar172016_2.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar182016.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar222016.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar242016_1.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar292016.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar312016_1.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_Mar312016_2.csv_mean_rt}] {\data};
+      \addplot[rtscatter] table [x expr=\coordindex+1, y expr = \thisrow{rt_fMRIAnalysis_September032015.csv_mean_rt}] {\data};
+      %
+      \addplot [only marks, blue, error bars/.cd, y dir=both, y explicit] table [x expr = 1,
+      y expr = \thisrow{mean_rt_nonsurprise}, y error expr = \thisrow{se_rt_nonsurprise}] {\datamean};
+      \addplot [only marks, orange, error bars/.cd, y dir=both, y explicit] table [x expr = 2,
+      y expr = \thisrow{mean_rt_surprise}, y error expr = \thisrow{se_rt_surprise}] {\datamean};
+      %
+      \addplot[black, thick] coordinates {(1, 2.8) (2, 2.8)};
+      \node[font={\fontsize{8pt}{12 pt}\selectfont}] at (axis cs: 1.5, 2.87) {*};
+    \end{axis}
+  \end{tikzpicture}
+
+\end{minipage}
+\end{document}

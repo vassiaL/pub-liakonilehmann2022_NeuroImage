@@ -1,0 +1,67 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+
+\newcommand{\subheight}{3cm}
+\newcommand{\multiplyingfactor}{0.2}
+\newcommand{\additivefactor}{0}
+\begin{document}
+
+\begin{minipage}{8cm}
+\begin{tabular}{l}
+  \begin{tikzpicture}
+    \pgfplotstableread{../data/learningcurve_G3_6_s1.csv}\data
+    \begin{axis}[
+      mark size = 1pt,
+      width = \textwidth,
+      height = \subheight,
+      ymin = 0.25, ymax = 1.05,
+      xmin = 0, xmax = 35,
+      xtick={0, 5, ..., 35},
+      ylabel = {$\%$ correct},
+      xlabel = {visits},
+      title = 1-or-2
+      ]
+      \addplot[scatter, only marks, unequaldist,
+          visualization depends on={\additivefactor + \multiplyingfactor*\thisrow{6_s1_nrofsubjects} \as \weight},
+          scatter/@pre marker code/.style={/tikz/mark size=\weight},
+          scatter/@post marker code/.style={}
+          ]
+          table [x expr = \thisrow{6_s1_episodenumber}, y expr = \thisrow{6_s1_ratiocorrect}] {\data};
+      \addplot[red!60!black, thick] table [x expr = \thisrow{6_s1_episodenumber}, y expr = \thisrow{6_s1_fitteddata}] {\data};
+      \pgfplotstablegetelem{1}{6_s1_thresholddelay}\of{\data}
+      \pgfmathsetmacro{\xthrs}{\pgfplotsretval}
+      \addplot[blue, thick, dashed] coordinates {(\xthrs, 0) (\xthrs, 1)};
+    \end{axis}
+  \end{tikzpicture}
+  \\
+  \hspace{2pt}
+  \begin{tikzpicture}
+    \pgfplotstableread{../data/learningcurve_G1_7_s2.csv}\data
+    \begin{axis}[
+      mark size = 1pt,
+      width = \textwidth,
+      height = \subheight,
+      ymin = -0.05, ymax = 1.05,
+      xmin = 0, xmax = 35,
+      xtick={0, 5, ..., 35},
+      ytick={0, 1},
+      yticklabels={A, B},
+      ylabel = {$\%$ choice},
+      xlabel = {visits},
+      title = 2-or-2
+      ]
+      \addplot[scatter, only marks, equaldist,
+          visualization depends on={\additivefactor + \multiplyingfactor*\thisrow{7_s2_nrofsubjects} \as \weight},
+          scatter/@pre marker code/.style={/tikz/mark size=\weight},
+          scatter/@post marker code/.style={}
+          ]
+          table [x expr = \thisrow{7_s2_episodenumber}, y expr = \thisrow{7_s2_ratiocorrect}] {\data};
+      \addplot[red!60!black, thick] table [x expr = \thisrow{7_s2_episodenumber}, y expr = \thisrow{7_s2_fitteddata}] {\data};
+    \end{axis}
+  \end{tikzpicture}
+\end{tabular}
+\end{minipage}
+\end{document}

@@ -1,0 +1,67 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+
+\newcommand{\subheight}{3cm}
+\newcommand{\multiplyingfactor}{0.2}
+\newcommand{\additivefactor}{0}
+\begin{document}
+
+\begin{minipage}{8cm}
+\begin{tabular}{l}
+  \begin{tikzpicture}
+    \pgfplotstableread{../data/learningcurve_G1_4_bG1.csv}\data
+    \begin{axis}[
+      mark size = 1pt,
+      width = \textwidth,
+      height = \subheight,
+      ymin = 0.25, ymax = 1.05,
+      xmin = 0, xmax = 35,
+      xtick={0, 5, ..., 35},
+      ylabel = {$\%$ correct},
+      xlabel = {visits},
+      title = 0-or-3
+      ]
+      \addplot[scatter, only marks, unequaldist,
+          visualization depends on={\additivefactor + \multiplyingfactor*\thisrow{4_bG1_nrofsubjects} \as \weight},
+          scatter/@pre marker code/.style={/tikz/mark size=\weight},
+          scatter/@post marker code/.style={}
+          ]
+          table [x expr = \thisrow{4_bG1_episodenumber}, y expr = \thisrow{4_bG1_ratiocorrect}] {\data};
+      \addplot[red!60!black, thick] table [x expr = \thisrow{4_bG1_episodenumber}, y expr = \thisrow{4_bG1_fitteddata}] {\data};
+      \pgfplotstablegetelem{1}{4_bG1_thresholddelay}\of{\data}
+      \pgfmathsetmacro{\xthrs}{\pgfplotsretval}
+      \addplot[blue, thick, dashed] coordinates {(\xthrs, 0) (\xthrs, 1)};
+    \end{axis}
+  \end{tikzpicture}
+  \\
+  \begin{tikzpicture}
+    \pgfplotstableread{../data/learningcurve_G3_2_bG1.csv}\data
+    \begin{axis}[
+      mark size = 1pt,
+      width = \textwidth,
+      height = \subheight,
+      ymin = 0.25, ymax = 1.05,
+      xmin = 0, xmax = 35,
+      xtick={0, 5, ..., 35},
+      ylabel = {$\%$ correct},
+      xlabel = {visits},
+      title = 0-or-1
+      ]
+      \addplot[scatter, only marks, unequaldist,
+          visualization depends on={\additivefactor + \multiplyingfactor*\thisrow{2_bG1_nrofsubjects} \as \weight},
+          scatter/@pre marker code/.style={/tikz/mark size=\weight},
+          scatter/@post marker code/.style={}
+          ]
+          table [x expr = \thisrow{2_bG1_episodenumber}, y expr = \thisrow{2_bG1_ratiocorrect}] {\data};
+      \addplot[red!60!black, thick] table [x expr = \thisrow{2_bG1_episodenumber}, y expr = \thisrow{2_bG1_fitteddata}] {\data};
+      \pgfplotstablegetelem{1}{2_bG1_thresholddelay}\of{\data}
+      \pgfmathsetmacro{\xthrs}{\pgfplotsretval}
+      \addplot[blue, thick, dashed] coordinates {(\xthrs, 0) (\xthrs, 1)};
+    \end{axis}
+  \end{tikzpicture}
+\end{tabular}
+\end{minipage}
+\end{document}

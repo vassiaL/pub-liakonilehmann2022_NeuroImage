@@ -1,0 +1,63 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+
+\newcommand{\send}{}
+
+\begin{document}
+
+\begin{minipage}{8cm}
+\begin{tikzpicture}
+   \pgfplotstableread{../data/resultsKlaas_pxp_PG.csv}\data
+
+  \pgfplotstablegetelem{0}{REINFORCE\send}\of{\data}
+  \pgfmathsetmacro{\REINFORCE}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{actor_critic_TD\send}\of{\data}
+  \pgfmathsetmacro{\AC}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{hybrid_actorcritic_FWD\send}\of{\data}
+  \pgfmathsetmacro{\HybridACFWD}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{REINFORCE_baseline\send}\of{\data}
+  \pgfmathsetmacro{\REINFORCEbaseline}{\pgfplotsretval}
+
+  % ----------------
+  % With s_max = 20
+  \pgfplotstablegetelem{0}{REINFORCE_modulated\send}\of{\data}
+  \pgfmathsetmacro{\REINFORCEmodulated}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{actor_critic_TD_modulatedActor_1degree\send}\of{\data}
+  \pgfmathsetmacro{\ACmodulated}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{hybrid_actorcritic_FWD_BF\send}\of{\data}
+  \pgfmathsetmacro{\HybridACFWDBF}{\pgfplotsretval}
+
+  \begin{axis}[
+    width = \textwidth,
+    ymajorgrids,
+    xmin = -1,
+    xmax = 7,
+    ymin = 0.1,
+    ymax = 0.23,
+    xtick={0, 1, 2, ..., 6},
+    xticklabel style={rotate={60}, anchor={east}},
+    xticklabels={Hybrid Actor-critic PF, Surprise Actor-critic, REINFORCE, Hybrid Actor-critic , REINFORCE baseline, Surprise REINFORCE,  Actor-critic},
+    ylabel = protected exceedance probability,
+    enlarge x limits=-1,
+    ]
+    %
+    \addplot [ybar, fill=\hybrid, draw=none, mark=none] coordinates {(0,  \HybridACFWDBF)};
+    \addplot [ybar, fill=\modelfreesurp, draw=none, mark=none] coordinates {(1, \ACmodulated)};
+    \addplot [ybar, fill=\modelfree, draw=none, mark=none] coordinates {(2,  \REINFORCE)};
+    \addplot [ybar, fill=\hybrid, draw=none, mark=none] coordinates {(3,  \HybridACFWD)};
+    \addplot [ybar, fill=\modelfree, draw=none, mark=none] coordinates {(4,  \REINFORCEbaseline)};
+    \addplot [ybar, fill=\modelfreesurp, draw=none, mark=none] coordinates {(5, \REINFORCEmodulated)};
+     \addplot [ybar, fill=\modelfree, draw=none, mark=none] coordinates {(6,  \AC)};
+\end{axis}
+\end{tikzpicture}
+
+\end{minipage}
+\end{document}

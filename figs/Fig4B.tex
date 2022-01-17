@@ -1,0 +1,185 @@
+\documentclass{standalone}
+\input{tikzsetup.tex}
+\usepgfplotslibrary{statistics}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{calc}
+
+
+\newcommand{\whichrunGone}{../data/learningcurvebar_bootstrap_G1_exporder_SurpAC_run2.csv}
+
+\newcommand{\whichrunGthree}{../data/learningcurvebar_bootstrap_G3_exporder_SurpAC_run2.csv}
+
+\begin{document}
+
+\begin{minipage}{8cm}
+\begin{tikzpicture}
+  \pgfplotstableread{../data/learningcurvebar_bootstrap_G1.csv}\dataGone
+  \pgfplotstableread{\whichrunGone}\dataGonesimrun
+
+    \pgfplotstableread{../data/learningcurvebar_bootstrap_G3.csv}\dataGthree
+    \pgfplotstableread{\whichrunGthree}\dataGthreesimrun
+
+  \pgfplotstablegetelem{0}{4_bG1_thresholddelay_mean}\of{\dataGone}
+  \pgfmathsetmacro{\bGoneGone}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{4_bG1_thresholddelay_std}\of{\dataGone}
+  \pgfmathsetmacro{\bGoneGonestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{4_bG1_dist1vsdist2}\of{\dataGone}
+  \xdef\bGoneGonedist{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{6_bG2_thresholddelay_mean}\of{\dataGone}
+  \pgfmathsetmacro{\bGtwoGone}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{6_bG2_thresholddelay_std}\of{\dataGone}
+  \pgfmathsetmacro{\bGtwoGonestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{6_bG2_dist1vsdist2}\of{\dataGone}
+  \xdef\bGtwoGonedist{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{3_bG2_thresholddelay_mean}\of{\dataGthree}
+  \pgfmathsetmacro{\bGtwoGthree}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{3_bG2_thresholddelay_std}\of{\dataGthree}
+  \pgfmathsetmacro{\bGtwoGthreestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{3_bG2_dist1vsdist2}\of{\dataGthree}
+  \xdef\bGtwoGthreedist{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{2_bG1_thresholddelay_mean}\of{\dataGthree}
+  \pgfmathsetmacro{\bGoneGthree}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{2_bG1_thresholddelay_std}\of{\dataGthree}
+  \pgfmathsetmacro{\bGoneGthreestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{2_bG1_dist1vsdist2}\of{\dataGthree}
+  \xdef\bGoneGthreedist{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{5_i2_thresholddelay_mean}\of{\dataGthree}
+  \pgfmathsetmacro{\itwoGthree}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{5_i2_thresholddelay_std}\of{\dataGthree}
+  \pgfmathsetmacro{\itwoGthreestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{5_i2_dist1vsdist2}\of{\dataGthree}
+  \xdef\itwoGthreedist{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{2_i1_thresholddelay_mean}\of{\dataGone}
+  \pgfmathsetmacro{\ioneGone}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{2_i1_thresholddelay_std}\of{\dataGone}
+  \pgfmathsetmacro{\ioneGonestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{2_i1_dist1vsdist2}\of{\dataGone}
+  \xdef\ioneGonedist{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{3_s1_thresholddelay_mean}\of{\dataGone}
+  \pgfmathsetmacro{\soneGone}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{3_s1_thresholddelay_std}\of{\dataGone}
+  \pgfmathsetmacro{\soneGonestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{3_s1_dist1vsdist2}\of{\dataGone}
+  \xdef\soneGonedist{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{4_i1_thresholddelay_mean}\of{\dataGthree}
+  \pgfmathsetmacro{\ioneGthree}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{4_i1_thresholddelay_std}\of{\dataGthree}
+  \pgfmathsetmacro{\ioneGthreestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{4_i1_dist1vsdist2}\of{\dataGthree}
+  \xdef\ioneGthreedist{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{6_s1_thresholddelay_mean}\of{\dataGthree}
+  \pgfmathsetmacro{\soneGthree}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{6_s1_thresholddelay_std}\of{\dataGthree}
+  \pgfmathsetmacro{\soneGthreestd}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{6_s1_dist1vsdist2}\of{\dataGthree}
+  \xdef\soneGthreedist{\pgfplotsretval}
+  %
+  %
+  % ----------------------------------------------------------------------------
+  % ----------------------------------------------------------------------------
+  % ---------------------- Simulated data --------------------------------------
+  % ----------------------------------------------------------------------------
+  % ----------------------------------------------------------------------------
+
+  \pgfplotstablegetelem{0}{4_bG1_thresholddelay_mean}\of{\dataGonesimrun}
+  \pgfmathsetmacro{\bGoneGonerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{4_bG1_thresholddelay_std}\of{\dataGonesimrun}
+  \pgfmathsetmacro{\bGoneGonestdrun}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{6_bG2_thresholddelay_mean}\of{\dataGonesimrun}
+  \pgfmathsetmacro{\bGtwoGonerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{6_bG2_thresholddelay_std}\of{\dataGonesimrun}
+  \pgfmathsetmacro{\bGtwoGonestdrun}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{3_bG2_thresholddelay_mean}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\bGtwoGthreerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{3_bG2_thresholddelay_std}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\bGtwoGthreestdrun}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{2_bG1_thresholddelay_mean}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\bGoneGthreerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{2_bG1_thresholddelay_std}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\bGoneGthreestdrun}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{5_i2_thresholddelay_mean}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\itwoGthreerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{5_i2_thresholddelay_std}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\itwoGthreestdrun}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{2_i1_thresholddelay_mean}\of{\dataGonesimrun}
+  \pgfmathsetmacro{\ioneGonerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{2_i1_thresholddelay_std}\of{\dataGonesimrun}
+  \pgfmathsetmacro{\ioneGonestdrun}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{3_s1_thresholddelay_mean}\of{\dataGonesimrun}
+  \pgfmathsetmacro{\soneGonerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{3_s1_thresholddelay_std}\of{\dataGonesimrun}
+  \pgfmathsetmacro{\soneGonestdrun}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{4_i1_thresholddelay_mean}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\ioneGthreerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{4_i1_thresholddelay_std}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\ioneGthreestdrun}{\pgfplotsretval}
+
+  \pgfplotstablegetelem{0}{6_s1_thresholddelay_mean}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\soneGthreerun}{\pgfplotsretval}
+  \pgfplotstablegetelem{0}{6_s1_thresholddelay_std}\of{\dataGthreesimrun}
+  \pgfmathsetmacro{\soneGthreestdrun}{\pgfplotsretval}
+  % %
+  % ----------------------------------------------------------------------------
+  % ----------------------------------------------------------------------------
+  % ----------------------------------------------------------------------------
+  \begin{axis}[
+    bar width = 5pt,
+    width = \textwidth,
+    ymajorgrids,
+    xmin = 0,
+    xmax = 10,
+    ymax = 34,
+    ymin = 0,
+    xtick={1, 2, ..., 9},
+    xticklabels={\bGoneGonedist, \bGtwoGonedist, \bGtwoGthreedist, \bGoneGthreedist, \itwoGthreedist,
+    \ioneGonedist, \soneGonedist, \ioneGthreedist, \soneGthreedist},
+    xticklabel style={rotate={60}, anchor={east}},
+    ylabel = steps to 80\% performance,
+    enlarge x limits=-1,
+    ]
+    \addplot[ybar, onefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(1, \bGoneGone) +- (0, \bGoneGonestd)};
+    \addplot[only marks, one, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(1, \bGoneGonerun) +- (0, \bGoneGonestdrun)};
+    %
+    \addplot[ybar, onefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(2, \bGtwoGone) +- (0, \bGtwoGonestd)};
+    \addplot[only marks, one, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(2, \bGtwoGonerun) +- (0, \bGtwoGonestdrun)};
+    %
+    \addplot[ybar, threefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(3, \bGtwoGthree) +- (0, \bGtwoGthreestd)};
+    \addplot[only marks, three, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(3, \bGtwoGthreerun) +- (0, \bGtwoGthreestdrun)};
+    %
+    \addplot[ybar, threefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(4, \bGoneGthree) +- (0, \bGoneGthreestd)};
+    \addplot[only marks, three, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(4, \bGoneGthreerun) +- (0, \bGoneGthreestdrun)};
+    %
+    \addplot[ybar, threefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(5, \itwoGthree) +- (0, \itwoGthreestd)};
+    \addplot[only marks, three, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(5, \itwoGthreerun) +- (0, \itwoGthreestdrun)};
+    %
+    \addplot[ybar, threefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(6, \ioneGthree) +- (0, \ioneGthreestd)};
+    \addplot[only marks, three, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(6, \ioneGthreerun) +- (0, \ioneGthreestdrun)};
+    %
+    \addplot[ybar, onefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(7, \ioneGone) +- (0, \ioneGonestd)};
+    \addplot[only marks, one, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(7, \ioneGonerun) +- (0, \ioneGonestdrun)};
+    %
+    \addplot[ybar, threefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(8, \soneGthree) +- (0, \soneGthreestd)};
+    \addplot[only marks, three, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(8, \soneGthreerun) +- (0, \soneGthreestdrun)};
+    %
+    \addplot[ybar, onefaded, error bars/.cd, error bar style={very thick,gray}, y dir=both, y explicit] coordinates {(9, \soneGone) +- (0, \soneGonestd)};
+    \addplot[only marks, one, error bars/.cd, error bar style={very thick,black}, y dir=both, y explicit] coordinates {(9, \soneGonerun) +- (0, \soneGonestdrun)};
+\end{axis}
+\end{tikzpicture}
+
+\end{minipage}
+\end{document}

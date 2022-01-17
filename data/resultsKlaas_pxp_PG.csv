@@ -1,0 +1,2 @@
+REINFORCE REINFORCE_baseline REINFORCE_modulated actor_critic_TD actor_critic_TD_modulatedActor_1degree hybrid_actorcritic_FWD hybrid_actorcritic_FWD_BF
+0.1422 0.14223 0.14263 0.14546 0.142 0.14284 0.14264
