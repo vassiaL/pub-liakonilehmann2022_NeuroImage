@@ -6,8 +6,9 @@ V. Liakoni *, M. Lehmann *, A. Modirshanechi, J. Brea, A. Lutti, W. Gerstner ** 
 \* V.L. and M.L. made equal contribution to this article. \
 \** W.G. and K.P. made equal contribution to this article.
 
-Contact:
-[vasiliki.liakoni@gmail.com](mailto:vasiliki.liakoni@gmail.com)
+Contact: \
+[vasiliki.liakoni@gmail.com](mailto:vasiliki.liakoni@gmail.com) \
+[marco.lehmann@gmail.com](mailto:marco.lehmann@gmail.com)
 
 ## Installation
 
